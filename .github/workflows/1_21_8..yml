@@ -1,0 +1,35 @@
+name: Build WorldGuard 1.21.8
+
+on:
+  push:
+    branches: [ "folia" ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout specific commit
+        uses: actions/checkout@v4
+        with:
+          ref: e3eff01199a676600ca628c4ab13282e3d529500
+
+      - name: Set up Java Temurin 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Make Gradle executable
+        run: chmod +x gradlew
+
+      - name: Build WorldGuard
+        run: ./gradlew build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: worldguard-bukkit-build-e3eff01
+          path: worldguard-bukkit/build/libs/
